@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guía — Tamagotchi Tayo Tayo</title>
+  <style>
+    :root { --bg: #0f172a; --card: #1e293b; --text: #e2e8f0; --accent: #38bdf8; --border: #334155; }
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; margin: 0; padding: 1.5rem; max-width: 52rem; margin-inline: auto; }
+    h1, h2, h3 { color: #fff; margin-top: 2rem; }
+    h1 { font-size: 1.75rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.5rem; }
+    h2 { font-size: 1.35rem; }
+    h3 { font-size: 1.1rem; color: var(--accent); }
+    p, li { font-size: 0.95rem; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.25rem; margin: 1rem 0; }
+    code, pre { font-family: Consolas, monospace; font-size: 0.85rem; }
+    pre { background: #020617; padding: 1rem; overflow-x: auto; border-radius: 0.5rem; border: 1px solid var(--border); }
+    .line { display: grid; grid-template-columns: 3rem 1fr; gap: 0.75rem; padding: 0.35rem 0; border-bottom: 1px solid #33415540; font-size: 0.88rem; }
+    .ln { color: #94a3b8; text-align: right; }
+    nav a { color: var(--accent); }
+    details { background: var(--card); border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.75rem 1rem; margin: 0.75rem 0; }
+    summary { cursor: pointer; font-weight: 600; color: #fbbf24; }
+    summary:hover { color: #fcd34d; }
+    .respuesta { margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--border); }
+    ol.steps { padding-left: 1.25rem; }
+    ol.steps li { margin: 0.5rem 0; }
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <h1>Guía del proyecto Tamagotchi Tayo Tayo</h1>
+  <p><a href="juego.html">Abrir el juego</a> · <a href="index.html">Página principal</a></p>
+
+  <!-- ========== PARTE 1: EL EJERCICIO ========== -->
+  <h2>1. De qué va el ejercicio (como en clase)</h2>
+  <div class="card">
+    <p>Hola. Imagina que tienes una mascota virtual en la pantalla: <strong>Tayo Tayo</strong>. No es un vídeo que miras sin más: tú tienes que <strong>cuidarla</strong>.</p>
+    <p>Tiene cuatro “necesidades” con nota de <strong>0 a 10</strong>:</p>
+    <ul>
+      <li>Salud ❤️</li>
+      <li>Felicidad ⭐</li>
+      <li>Limpieza 💧</li>
+      <li>Energía ⚡</li>
+    </ul>
+    <p><strong>Al abrir el juego</strong>, esas cuatro notas salen <strong>al azar</strong>.</p>
+    <p><strong>Cada 5 segundos</strong>, sin hacer nada, las cuatro bajan 1 punto. El tiempo juega en tu contra.</p>
+    <p>Tienes <strong>6 botones</strong> (alimentar, jugar, dormir, duchar, reprender, acariciar). Cada uno sube o baja stats según el enunciado.</p>
+    <p><strong>En tu versión del proyecto:</strong> el juego termina cuando <strong>las cuatro</strong> stats están en <strong>0</strong> a la vez (la suma de las cuatro es 0). Entonces sale el mensaje de game over, el vídeo de fin y los botones dejan de funcionar.</p>
+    <p>La profesora también pide: una <strong>clase</strong> Tamagotchi, <strong>funciones flecha</strong> en el JS principal, <strong>enlazar el HTML</strong>, <strong>temporizador</strong> y <strong>quitar los event listeners</strong> al morir. Tu página debe verse bien en móvil y en ordenador.</p>
+  </div>
+
+  <!-- ========== PARTE 2: PASOS DEL PROYECTO ========== -->
+  <h2>2. Pasos que seguimos para construirlo</h2>
+  <div class="card">
+    <ol class="steps">
+      <li><strong>Página HTML</strong> (<code>juego.html</code>): vídeo, barras de emojis, reglas, 6 botones, mensaje oculto de game over.</li>
+      <li><strong>Clase</strong> (<code>js/clase-tamagotchi.js</code>): el “cuerpo” de Tayo — stats, aleatorio, limitar 0–10, bajar todo, suma, está muerto.</li>
+      <li><strong>Datos</strong> (<code>js/datos-tamagotchi.js</code>): nombre, iconos, efectos de cada botón, ruta del vídeo de game over.</li>
+      <li><strong>App</strong> (<code>js/app.js</code>): enlaza ids → inicia juego → activa timer y clics. Estructura del curso: variables, funciones, ejecución.</li>
+      <li><strong>Orden al cargar:</strong> <code>enlazarIds()</code> → <code>iniciarJuego()</code> → <code>activarAcciones()</code>.</li>
+      <li><strong>Indicadores:</strong> se quitan de <strong>derecha a izquierda</strong> (<code>justify-start</code> + <code>pintarIconos</code>).</li>
+      <li><strong>Muerte:</strong> mensaje ámbar, vídeo <code>juego-terminado.webm</code>, foto del aside en gris, <code>removeEventListener</code>.</li>
+      <li><strong>Sin <code>import</code>:</strong> tres <code>&lt;script&gt;</code> en el HTML (no módulos ES6).</li>
+    </ol>
+  </div>
+
+  <!-- ========== PARTE 3: HTML ========== -->
+  <h2>3. Explicación del HTML (<code>juego.html</code>)</h2>
+  <p>Cada bloque corresponde a las líneas del archivo. Las clases largas de Tailwind son para diseño y responsive.</p>
+
+  <h3>Cabecera (líneas 1–93)</h3>
+  <div class="card">
+    <div class="line"><span class="ln">1</span><span><code>&lt;!DOCTYPE html&gt;</code> — El documento es HTML5.</span></div>
+    <div class="line"><span class="ln">2</span><span><code>&lt;html lang="es"&gt;</code> — Idioma español (accesibilidad y SEO).</span></div>
+    <div class="line"><span class="ln">4–7</span><span><code>&lt;head&gt;</code> + <code>charset</code> + <code>viewport</code> + <code>&lt;title&gt;</code> — Codificación UTF-8, adaptable a móvil, título de la pestaña.</span></div>
+    <div class="line"><span class="ln">10–13</span><span>Enlaces a Google Fonts (Inclusive Sans).</span></div>
+    <div class="line"><span class="ln">15–16</span><span>Script de Tailwind v4 por CDN — estilos con clases.</span></div>
+    <div class="line"><span class="ln">18–91</span><span><code>&lt;style type="text/tailwindcss"&gt;</code> — Fuente por defecto, color marca, estilos de <code>p</code>/<code>h</code>, clases <code>.btn</code> reutilizables y tamaños responsive (sm, md, lg, xl).</span></div>
+  </div>
+
+  <h3>Cuerpo y layout (líneas 95–99)</h3>
+  <div class="card">
+    <div class="line"><span class="ln">95</span><span><code>body</code> — Fondo oscuro, texto blanco, altura mínima pantalla.</span></div>
+    <div class="line"><span class="ln">96</span><span><code>main</code> — Contenedor centrado; <code>max-md:pb-36</code> deja hueco abajo en móvil para los botones fijos.</span></div>
+    <div class="line"><span class="ln">97–98</span><span>Grid: en móvil 1 columna; desde <code>md</code> dos columnas (aside + juego).</span></div>
+  </div>
+
+  <h3>Aside izquierdo (líneas 100–138)</h3>
+  <div class="card">
+    <div class="line"><span class="ln">100–101</span><span><code>&lt;aside&gt;</code> — Panel blanco con borde: leyenda de emojis y foto.</span></div>
+    <div class="line"><span class="ln">103–108</span><span>Lista informativa: qué emoji es cada stat (no son los valores del juego).</span></div>
+    <div class="line"><span class="ln">112–118</span><span><code>img#fotoTayo</code> — Foto de Tayo; el JS le pone gris al game over.</span></div>
+    <div class="line"><span class="ln">121–124</span><span>Texto de ánimo para el jugador.</span></div>
+    <div class="line"><span class="ln">126–128</span><span>Caja azul clara: reglas resumidas (aleatorio, 5 s, perder si todo a cero).</span></div>
+    <div class="line"><span class="ln">130–136</span><span>Enlace <code>index.html</code> — Volver a la página principal.</span></div>
+  </div>
+
+  <h3>Zona de juego (líneas 141–256)</h3>
+  <div class="card">
+    <div class="line"><span class="ln">141–142</span><span><code>&lt;section&gt;</code> — Panel principal del juego (fondo gris oscuro).</span></div>
+    <div class="line"><span class="ln">144–149</span><span><code>#mensaje-juego</code> — Caja de game over; <code>hidden</code> al inicio; el JS quita <code>hidden</code> y escribe el texto.</span></div>
+    <div class="line"><span class="ln">151–152</span><span>Grid interno: vídeo a la izquierda (o arriba en móvil), stats + reglas a la derecha.</span></div>
+    <div class="line"><span class="ln">156–164</span><span><code>video#videoTayo</code> — Vídeo principal; <code>data-video-src</code> en botones cambia el src desde JS.</span></div>
+    <div class="line"><span class="ln">172–188</span><span>Cuatro filas: etiqueta + <code>span#iconos-...</code> con <code>justify-start</code> para que al bajar desaparezca el emoji de la derecha.</span></div>
+    <div class="line"><span class="ln">192–199</span><span>Bloque “Reglas” con las cuatro viñetas del juego.</span></div>
+    <div class="line"><span class="ln">203–204</span><span>Contenedor de botones: en móvil <code>fixed</code> abajo (barra flotante); en <code>md</code> estático debajo del contenido.</span></div>
+    <div class="line"><span class="ln">206–253</span><span>Seis <code>button</code> con <code>id="btn-..."</code> y <code>data-video-src</code> — El JS usa el id para el listener y el data para el vídeo. Reprender en rojo.</span></div>
+  </div>
+
+  <h3>Pie y scripts (líneas 262–269)</h3>
+  <div class="card">
+    <div class="line"><span class="ln">262–264</span><span><code>&lt;footer&gt;</code> — Pie de página.</span></div>
+    <div class="line"><span class="ln">267–269</span><span>Tres scripts en orden: <strong>clase → datos → app</strong>. Sin esto, <code>app.js</code> no encuentra <code>Tamagotchi</code> ni <code>ACCIONES</code>.</span></div>
+  </div>
+
+  <!-- ========== PARTE 4: JS CLASE ========== -->
+  <h2>4. Explicación línea a línea — <code>clase-tamagotchi.js</code></h2>
+  <div class="card">
+    <div class="line"><span class="ln">1</span><span><code>class Tamagotchi {</code> — Define el molde del animal (pide la rúbrica).</span></div>
+    <div class="line"><span class="ln">2–8</span><span><code>constructor(nombre)</code> — Al hacer <code>new Tamagotchi(...)</code>, guarda nombre y pone las 4 stats en 0 hasta llamar a aleatorio.</span></div>
+    <div class="line"><span class="ln">10–15</span><span><code>valoresAleatorios()</code> — <code>Math.random()*11</code> + <code>floor</code> → entero de 0 a 10 para cada stat.</span></div>
+    <div class="line"><span class="ln">17–21</span><span><code>limitar(valor)</code> — Nada por debajo de 0 ni por encima de 10.</span></div>
+    <div class="line"><span class="ln">23–25</span><span><code>cambiarStat(stat, cantidad)</code> — Suma o resta y pasa por <code>limitar</code>. <code>this[stat]</code> accede por nombre: 'salud', 'felicidad', etc.</span></div>
+    <div class="line"><span class="ln">27–32</span><span><code>bajarTodasLasStats()</code> — Resta 1 a las cuatro (regla de cada 5 segundos).</span></div>
+    <div class="line"><span class="ln">34–36</span><span><code>obtenerSuma()</code> — Suma las 4 stats (truco para saber si todas están a 0).</span></div>
+    <div class="line"><span class="ln">38–40</span><span><code>estaMuerto()</code> — <code>true</code> solo si la suma es exactamente 0 (las cuatro a cero).</span></div>
+    <div class="line"><span class="ln">41</span><span>Cierre de la clase.</span></div>
+  </div>
+
+  <!-- ========== PARTE 5: JS DATOS ========== -->
+  <h2>5. Explicación línea a línea — <code>datos-tamagotchi.js</code></h2>
+  <div class="card">
+    <div class="line"><span class="ln">1</span><span><code>NOMBRE_MASCOTA</code> — Texto para <code>new Tamagotchi(NOMBRE_MASCOTA)</code>.</span></div>
+    <div class="line"><span class="ln">2</span><span><code>VIDEO_GAME_OVER</code> — Ruta del vídeo cuando muere.</span></div>
+    <div class="line"><span class="ln">4–9</span><span><code>ICONOS</code> — Objeto: cada stat tiene su emoji para pintar la pantalla.</span></div>
+    <div class="line"><span class="ln">11–32</span><span><code>ACCIONES</code> — Objeto con 6 claves (una por botón). Cada valor es un array de { stat, cantidad } según el PDF del examen.</span></div>
+  </div>
+
+  <!-- ========== PARTE 6: JS APP ========== -->
+  <h2>6. Explicación línea a línea — <code>app.js</code></h2>
+  <div class="card">
+    <div class="line"><span class="ln">1–2</span><span>Comentario: no usamos <code>import</code>; los scripts van en el HTML.</span></div>
+    <div class="line"><span class="ln">5–6</span><span><code>tamagotchi</code> y <code>temporizador</code> — Variables que cambian durante la partida.</span></div>
+    <div class="line"><span class="ln">8–10</span><span><code>botones</code> — Nombres de acciones; <code>manejadores</code> y <code>refsBotones</code> — Para guardar funciones y elementos del DOM (quitar listeners después).</span></div>
+    <div class="line"><span class="ln">12–18</span><span>Referencias vacías al inicio; se rellenan en <code>enlazarIds</code>.</span></div>
+    <div class="line"><span class="ln">21–33</span><span><code>enlazarIds</code> — <code>getElementById</code> de iconos, mensaje, vídeo, foto y cada botón (mapeo HTML).</span></div>
+    <div class="line"><span class="ln">35–42</span><span><code>pintarIconos</code> — Crea N <code>&lt;span&gt;</code> con el emoji; al bajar N, hay un span menos → desaparece el de la derecha con <code>justify-start</code>.</span></div>
+    <div class="line"><span class="ln">44–49</span><span><code>actualizarPantalla</code> — Pinta las 4 filas según valores del tamagotchi.</span></div>
+    <div class="line"><span class="ln">51–67</span><span><code>finDePartida</code> — Para timer; mensaje; vídeo game over; foto gris; <code>removeEventListener</code> + <code>disabled</code> en botones.</span></div>
+    <div class="line"><span class="ln">69–71</span><span><code>comprobarFin</code> — Si <code>estaMuerto()</code>, llama a fin de partida.</span></div>
+    <div class="line"><span class="ln">73–79</span><span><code>aplicarAccion</code> — Recorre <code>ACCIONES[nombre]</code>, cambia stats, actualiza y comprueba fin.</span></div>
+    <div class="line"><span class="ln">81–89</span><span><code>pasarTiempo</code> — Cada 5 s: si no muerto, baja todas las stats, actualiza, comprueba fin.</span></div>
+    <div class="line"><span class="ln">91–101</span><span><code>crearManejador</code> — Devuelve función del clic: cambia vídeo si hay <code>data-video-src</code>, luego aplica acción.</span></div>
+    <div class="line"><span class="ln">103–107</span><span><code>iniciarJuego</code> — Crea objeto, aleatorio, primera pintura.</span></div>
+    <div class="line"><span class="ln">109–116</span><span><code>activarAcciones</code> — <code>setInterval(..., 5000)</code> y <code>addEventListener</code> en cada botón.</span></div>
+    <div class="line"><span class="ln">119–123</span><span><strong>Ejecución:</strong> Cuando el DOM está listo → ids → iniciar → acciones.</span></div>
+  </div>
+
+  <!-- ========== PARTE 7: PREGUNTAS ========== -->
+  <h2>7. Test — 15 preguntas</h2>
+  <p>Lee la pregunta. Haz clic en la flecha ▶ para ver la respuesta detallada.</p>
+
+  <details>
+    <summary>1. ¿Qué es un Tamagotchi en este ejercicio?</summary>
+    <div class="respuesta">
+      <p>Es una <strong>mascota virtual</strong> representada por un objeto en JavaScript. Tienes que vigilar cuatro necesidades (salud, felicidad, limpieza, energía) con valores de 0 a 10. El tiempo las reduce; tus botones las suben o bajan. Si en tu versión las cuatro llegan a 0, pierdes.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>2. ¿Por qué hay tres archivos JavaScript?</summary>
+    <div class="respuesta">
+      <p><strong>clase-tamagotchi.js</strong> — Lógica del animal (cómo cambian los números).<br>
+      <strong>datos-tamagotchi.js</strong> — Datos fijos (nombre, emojis, efectos de botones).<br>
+      <strong>app.js</strong> — Une la página con la clase y los datos (clics, timer, pantalla).<br>
+      Separar hace el código más ordenado y fácil de corregir en el examen.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>3. ¿Qué hace <code>valoresAleatorios()</code>?</summary>
+    <div class="respuesta">
+      <p>Asigna un número entero <strong>aleatorio entre 0 y 10</strong> a salud, felicidad, limpieza y energía. Usa <code>Math.random()</code> (0 hasta menos de 1), multiplica por 11 y <code>Math.floor</code> para obtener 0, 1, 2 … 10. Cumple el requisito de “inicio aleatorio” de la rúbrica.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>4. ¿Para qué sirve <code>limitar()</code>?</summary>
+    <div class="respuesta">
+      <p>Evita que ninguna stat sea <strong>menor que 0</strong> ni <strong>mayor que 10</strong>. Sin esto, por ejemplo Duchar (+10 limpieza) o muchas acciones seguidas podrían dejar números inválidos. Centraliza la regla en un solo sitio.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>5. ¿Cómo funciona el temporizador de 5 segundos?</summary>
+    <div class="respuesta">
+      <p><code>setInterval(pasarTiempo, 5000)</code> en <code>activarAcciones</code> hace que el navegador ejecute <code>pasarTiempo</code> cada 5000 milisegundos (5 segundos). Esa función llama a <code>bajarTodasLasStats()</code> (resta 1 a las cuatro), luego <code>actualizarPantalla()</code> y <code>comprobarFin()</code>. Al morir, <code>clearInterval(temporizador)</code> lo detiene.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>6. ¿Cuándo se considera muerto Tayo Tayo en tu proyecto?</summary>
+    <div class="respuesta">
+      <p>Cuando <code>obtenerSuma() === 0</code>, es decir <strong>salud + felicidad + limpieza + energía = 0</strong>. Eso solo pasa si las <strong>cuatro</strong> valen 0 a la vez. No es lo mismo que el PDF que a veces dice “cuando una llega a 0”; tu HTML y tu clase siguen la regla de las cuatro a cero.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>7. ¿Qué es <code>ACCIONES</code> en datos-tamagotchi.js?</summary>
+    <div class="respuesta">
+      <p>Es un <strong>objeto</strong> cuyas claves son los nombres de los botones (alimentar, jugar…). Cada clave tiene un <strong>array</strong> de cambios: { stat: 'energia', cantidad: 3 }, etc. Así el enunciado del examen está en un solo sitio y <code>app.js</code> solo recorre esa lista al hacer clic.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>8. ¿Por qué usamos <code>getElementById</code>?</summary>
+    <div class="respuesta">
+      <p>Para <strong>mapear el HTML</strong>: enlazar cada parte de la página (iconos, mensaje, vídeo, botones) con una variable en JavaScript. Sin eso no podrías cambiar el texto de los emojis ni escuchar clics. La rúbrica lo llama “mapeo del HTML”. Se hace en <code>enlazarIds()</code> cuando el DOM ya está cargado.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>9. ¿Por qué hay que guardar <code>manejadores[nombre]</code>?</summary>
+    <div class="respuesta">
+      <p><code>removeEventListener</code> necesita la <strong>misma función</strong> que usaste en <code>addEventListener</code>. Si crearas una función nueva anónima al quitar, no funcionaría. Por eso <code>crearManejador(nombre)</code> devuelve una función que guardas en <code>manejadores[nombre]</code> y usas al añadir y al quitar el listener.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>10. ¿Qué hace <code>classList.remove('hidden')</code> en el game over?</summary>
+    <div class="respuesta">
+      <p>El div <code>#mensaje-juego</code> tiene la clase Tailwind <code>hidden</code> (display: none). Al quitarla, el mensaje “¡Game over!…” <strong>se hace visible</strong>. El texto se pone antes con <code>textContent</code>. No es una imagen: es HTML + CSS.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>11. ¿Cómo se muestra el vídeo de Tayo muerto?</summary>
+    <div class="respuesta">
+      <p>En <code>finDePartida()</code>: <code>videoTayo.pause()</code>, luego <code>videoTayo.src = VIDEO_GAME_OVER</code> (archivo <code>juego-terminado.webm</code>), <code>load()</code> y <code>play()</code>. Cambias la fuente del mismo elemento &lt;video&gt; que ya estaba en la página.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>12. ¿Por qué los emojis desaparecen de derecha a izquierda?</summary>
+    <div class="respuesta">
+      <p><code>pintarIconos</code> crea tantos &lt;span&gt; como el valor de la stat. En el HTML los contenedores usan <code>justify-start</code> (alineación a la izquierda). Si pasas de 5 a 4 emojis, el grupo es más corto y el que falta es el de la <strong>derecha</strong> del grupo.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>13. ¿Por qué no usamos <code>import</code> en app.js?</summary>
+    <div class="respuesta">
+      <p>Porque el proyecto carga tres <code>&lt;script src="..."&gt;</code> normales en <code>juego.html</code>. Eso deja <code>Tamagotchi</code>, <code>ACCIONES</code>, etc. como variables globales. Los <code>import</code> solo funcionan con <code>type="module"</code> y <code>export</code> en los otros archivos; mezclarlo rompería el juego si no cambias todo el HTML.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>14. ¿Qué orden de ejecución hay al cargar la página?</summary>
+    <div class="respuesta">
+      <p>1) El navegador lee HTML y ejecuta clase → datos → app.<br>
+      2) <code>DOMContentLoaded</code> dispara: <code>enlazarIds()</code> (getElementById), <code>iniciarJuego()</code> (new + aleatorio + pintar), <code>activarAcciones()</code> (interval + listeners).<br>
+      Ese orden lo pediste: primero ids, luego juego, luego acciones.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>15. ¿Qué pide la rúbrica de 10 puntos y dónde está en tu código?</summary>
+    <div class="respuesta">
+      <p><strong>1 Responsividad</strong> — clases Tailwind en juego.html (grid, botones fijos móvil).<br>
+      <strong>2 Diseño</strong> — contraste y tipografía en HTML/CSS.<br>
+      <strong>3 Clase</strong> — clase-tamagotchi.js.<br>
+      <strong>4 Objeto</strong> — <code>new Tamagotchi</code> en iniciarJuego.<br>
+      <strong>5 Aleatorio</strong> — valoresAleatorios().<br>
+      <strong>6 Flechas</strong> — funciones const en app.js.<br>
+      <strong>7 Mapeo HTML</strong> — enlazarIds.<br>
+      <strong>8 Listeners</strong> — addEventListener en activarAcciones.<br>
+      <strong>9 Timer</strong> — setInterval 5000.<br>
+      <strong>10 Quitar listeners</strong> — removeEventListener en finDePartida.</p>
+    </div>
+  </details>
+
+  <p style="margin-top: 3rem; color: #94a3b8; font-size: 0.85rem;">Guía del proyecto UF1843 — Tamagotchi Tayo Tayo. Abre este archivo en el navegador para hacer el test con respuestas ocultas.</p>
+
+</body>
+</html>
